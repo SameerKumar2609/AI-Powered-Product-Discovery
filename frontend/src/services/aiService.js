@@ -3,7 +3,7 @@ export const fetchAISearch = async (query) => {
     throw new Error("Search query is empty");
   }
 
-  const response = await fetch("http://localhost:5000/api/ai-search", {
+  const response = await fetch("https://your-backend.onrender.com/api/ai-search", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ query })
