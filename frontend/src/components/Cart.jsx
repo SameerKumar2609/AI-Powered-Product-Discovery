@@ -86,14 +86,18 @@ const styles = {
     borderRadius: "10px",
     padding: "16px",
     textAlign: "center",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+    cursor: "pointer"
   },
+  
 
   img: {
     width: "100%",
     height: "180px",
-    objectFit: "cover",
-    borderRadius: "8px"
+    objectFit: "contain",
+    borderRadius: "8px",
+    
+
   },
 
   price: {
@@ -109,7 +113,7 @@ const styles = {
     color: "white",
     borderRadius: "5px",
     border: "none",
-    cursor: "pointer"
+    
   },
 
   qty: { fontSize: "18px", fontWeight: "bold" },

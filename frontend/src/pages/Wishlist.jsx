@@ -62,13 +62,14 @@ const styles = {
     borderRadius: "10px",
     padding: "16px",
     textAlign: "center",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+    objectFit: "contain"
   },
 
   img: {
     width: "100%",
     height: "180px",
-    objectFit: "cover",
+    objectFit: "contain",
     borderRadius: "8px"
   },
 

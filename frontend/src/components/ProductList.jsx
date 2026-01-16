@@ -15,7 +15,8 @@ const styles = {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
     gap: "20px",
-    padding: "20px"
+    padding: "20px",
+    objectFit: "contain"
   }
 };
 

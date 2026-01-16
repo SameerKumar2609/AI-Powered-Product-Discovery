@@ -4,6 +4,8 @@ import ProductList from "../components/ProductList";
 import SearchBar from "../components/SearchBar";
 import { fetchAISearch } from "../services/aiService";
 import Filters from "../components/FilterBar";
+import ManualSearchBar from "../components/ManualSearchBar";
+
 
 
 const Home = () => {
@@ -25,6 +27,23 @@ const Home = () => {
   if (sort === "high-low") {
     result.sort((a, b) => b.price - a.price);
   }
+
+  setFilteredProducts(result);
+};
+
+  const handleManualSearch = (text) => {
+  if (!text || text.trim() === "") {
+    setFilteredProducts(products);
+    return;
+  }
+
+  const query = text.toLowerCase();
+
+  const result = products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(query) ||
+      p.category.toLowerCase().includes(query)
+  );
 
   setFilteredProducts(result);
 };
@@ -81,6 +100,9 @@ const Home = () => {
 
       {/* Error / Empty State */}
       {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {/* Manual Search */}
+      <ManualSearchBar onSearch={handleManualSearch} />
 
       {/* Filters */}
       <Filters onFilter={handleFilter} />
