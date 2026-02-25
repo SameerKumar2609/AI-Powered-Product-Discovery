@@ -4,6 +4,7 @@ import App from "./App";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import { ToastProvider } from "./context/ToastContext";
+import { ProductProvider } from "./context/ProductContext";
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -11,7 +12,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <CartProvider>
       <WishlistProvider>
         <ToastProvider>
+          <ProductProvider>
           <App />
+          </ProductProvider>
         </ToastProvider>
       </WishlistProvider>
     </CartProvider>

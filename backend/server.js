@@ -1,161 +1,85 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import fetch from "node-fetch";
 
 dotenv.config();
 
+
+
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
 /**
- * HELPER — validate + sanitize AI output
+ * -----------------------------------------
+ * AI PRODUCT DESCRIPTION GENERATOR
+ * -----------------------------------------
  */
-const normalizeResult = (aiData) => {
-  let category = aiData?.category || "all";
-  let min = aiData?.priceRange?.min ?? 0;
-  let max = aiData?.priceRange?.max ?? 1000000;
-  let features = Array.isArray(aiData?.features) ? aiData.features : [];
-
-  // Normalize text
-  category = String(category).toLowerCase().trim();
-
-  // Safety checks
-  if (!["smartphone", "laptop", "watch", "headphone", "earbuds", "powerbank", "tablet", "camera"].includes(category)) {
-    category = "all";   // unknown category → return all products
-  }
-
-  return {
-    category,
-    priceRange: { min, max },
-    features
-  };
-};
-
-
-/**
- * ------------------------------------
- * AI SEARCH ENDPOINT
- * ------------------------------------
- */
-app.post("/api/ai-search", async (req, res) => {
+app.post("/api/generate-description", async (req, res) => {
   try {
-    const { query } = req.body;
+    const { name, category } = req.body;
 
-    if (!query || !query.trim()) {
-      return res.status(400).json({
-        error: "Query is required"
-      });
+    if (!name) {
+      return res.status(400).json({ error: "Product name required" });
     }
 
-    console.log("Received AI Query:", query);
-
-    // -----------------------------
-    // If NO AI KEY → safe dummy logic
-    // -----------------------------
-    if (!process.env.OPENAI_API_KEY) {
-      console.log("⚠️ No AI Key. Using fallback mode.");
-
-      // Basic smart guess
-      const q = query.toLowerCase();
-
-      if (q.includes("phone") || q.includes("mobile")) {
-        return res.json({
-          category: "smartphone",
-          priceRange: { min: 0, max: 50000 },
-          features: []
-        });
-      }
-
-      if (q.includes("laptop")) {
-        return res.json({
-          category: "laptop",
-          priceRange: { min: 0, max: 100000 },
-          features: []
-        });
-      }
-
-      if (q.includes("watch")) {
-        return res.json({
-          category: "watch",
-          priceRange: { min: 0, max: 20000 },
-          features: []
-        });
-      }
-
-      if (q.includes("powerbank") || q.includes("power bank")) {
-        return res.json({
-          category: "powerbank",
-          priceRange: { min: 0, max: 10000 },
-          features: []
-        });
-      }
-
-      // nonsense queries
-      return res.json({
-        category: "all",
-        priceRange: { min: 0, max: 1000000 },
-        features: []
-      });
+    if (!process.env.GROQ_API_KEY) {
+      return res.status(500).json({ error: "Groq API key missing" });
     }
 
-
-    // -----------------------------
-    // REAL AI MODE
-    // -----------------------------
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "llama-3.1-8b-instant",
         messages: [
           {
             role: "system",
             content:
-              "You are an AI shopping assistant. ALWAYS return STRICT JSON only. " +
-              "No explanation. Categories allowed: smartphone, laptop, watch, headphone, earbuds, tablet, camera, powerbank, all. " +
-              "Return: { category: string, priceRange:{min:number,max:number}, features:string[] }"
+              "You are a professional e-commerce copywriter. Write a short, engaging product description with 3 bullet points highlighting key features."
           },
           {
             role: "user",
-            content: query
+            content: `Product: ${name}, Category: ${category}`
           }
         ],
-        temperature: 0.2
+        temperature: 0.7
       })
     });
 
     const data = await response.json();
 
-    // Extract text JSON from AI
-    let raw = data?.choices?.[0]?.message?.content;
-
-    console.log("AI Raw Output:", raw);
-
-    let parsed;
-
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      parsed = { category: "all" };
+    if (!data.choices) {
+      console.log("Groq Error:", data);
+      return res.status(500).json({ error: "AI generation failed" });
     }
 
-    const finalResponse = normalizeResult(parsed);
+    const description = data.choices[0].message.content;
 
-    console.log("Final AI Parsed Response:", finalResponse);
+    res.json({ description });
 
-    return res.json(finalResponse);
-
-  } catch (err) {
-    console.error("AI Search Error:", err);
-    return res.status(500).json({
-      error: "AI failed. Please try again",
-      fallback: true
-    });
+  } catch (error) {
+    console.error("Groq AI Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
+});
+
+
+
+
+
+/**
+ * -----------------------------------------
+ * HEALTH CHECK ROUTE (Optional but Useful)
+ * -----------------------------------------
+ */
+app.get("/", (req, res) => {
+  res.json({ message: "AI Description Backend Running 🚀" });
 });
 
 
@@ -163,6 +87,8 @@ app.post("/api/ai-search", async (req, res) => {
  * SERVER START
  */
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);
 });
+

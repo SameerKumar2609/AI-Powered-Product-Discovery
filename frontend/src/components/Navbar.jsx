@@ -12,7 +12,7 @@ const Navbar = () => {
     <nav style={styles.navbar}>
       {/* Logo */}
       <h2 style={styles.logo}>
-        AI Product Discovery
+        Nex<span style={{ color: "#f5413e" }}>Cart</span>
       </h2>
 
       {/* Links */}

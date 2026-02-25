@@ -7,6 +7,7 @@ import Wishlist from "./pages/Wishlist";
 import Navbar from "./components/Navbar";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
+import Admin from "./pages/Admin";
 
 
 
@@ -23,7 +24,7 @@ function App() {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-success" element={<OrderSuccess />} />
-
+        <Route path="/admin" element={<Admin />} />
 
       </Routes>
     </BrowserRouter>
