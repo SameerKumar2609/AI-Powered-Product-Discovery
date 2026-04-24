@@ -1,5 +1,5 @@
-LIVE:- https://ai-powered-product-discovery.vercel.app/
-      https://ai-powered-product-discovery.vercel.app/admin
+LIVE:- Frontend --  https://ai-powered-product-discovery.vercel.app/
+     ADMIN page:-   https://ai-powered-product-discovery.vercel.app/admin
       
 **NexCart — AI-Enhanced E-Commerce Platform**
 
