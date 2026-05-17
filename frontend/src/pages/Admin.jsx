@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useProducts } from "../context/ProductContext";
 import { generateDescription } from "../services/aiDescriptionService";
+import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
   const { products, addProduct, deleteProduct } = useProducts();
@@ -11,6 +12,17 @@ const Admin = () => {
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const [loadingAI, setLoadingAI] = useState(false);
+
+  const navigate = useNavigate();
+
+    const handleLogout = () => {
+      localStorage.removeItem("isAdmin");
+      navigate("/admin-login");
+    };
+
+  <button onClick={handleLogout} style={{ marginBottom: "20px" }}>
+  Logout
+  </button>
 
   /* ---------- AI GENERATE DESCRIPTION ---------- */
   const handleGenerateDescription = async () => {
@@ -30,6 +42,8 @@ const Admin = () => {
       setLoadingAI(false);
     }
   };
+
+      
 
   /* ---------- ADD PRODUCT ---------- */
   const handleAdd = () => {
@@ -132,6 +146,7 @@ const Admin = () => {
       ))}
     </div>
   );
+
 };
 
 /* ---------- STYLES ---------- */
