@@ -8,7 +8,8 @@ const AdminLogin = () => {
   const handleLogin = async () => {
     try {
       const res = await fetch(
-        "https://ai-powered-product-discovery-production.up.railway.app",
+        //new url for deployed backend
+        "https://ai-powered-product-discovery-production.up.railway.app/api/admin-login",
         {
           method: "POST",
           headers: {
