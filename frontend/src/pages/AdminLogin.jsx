@@ -5,13 +5,29 @@ const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // 🔑 Change this password
-    if (password === "admin123") {
-      localStorage.setItem("isAdmin", "true");
-      navigate("/admin");
-    } else {
-      alert("Wrong password");
+  const handleLogin = async () => {
+    try {
+      const res = await fetch(
+        "https://ai-powered-product-discovery-production.up.railway.app",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ password }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        localStorage.setItem("isAdmin", "true");
+        navigate("/admin");
+      } else {
+        alert("Wrong password");
+      }
+    } catch (err) {
+      alert("Server error");
     }
   };
 
@@ -27,7 +43,9 @@ const AdminLogin = () => {
         style={{ padding: "10px", marginRight: "10px" }}
       />
 
-      <button onClick={handleLogin}>Login</button>
+      <button onClick={handleLogin}>
+        Login
+      </button>
     </div>
   );
 };

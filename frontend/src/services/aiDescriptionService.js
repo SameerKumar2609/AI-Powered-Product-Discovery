@@ -1,6 +1,6 @@
 export const generateDescription = async (name, category) => {
   const response = await fetch(
-    "http://localhost:5000/api/generate-description",
+    "https://ai-powered-product-discovery-production.up.railway.app",
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
