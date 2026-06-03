@@ -1,5 +1,5 @@
 LIVE:- Frontend --  https://ai-powered-product-discovery.vercel.app
-     Product add page/ AI description feature :-   https://ai-powered-product-discovery.vercel.app/admin
+     Product add page/ AI description feature :-   https://ai-powered-product-discovery.vercel.app/admin PAssword admin page:- admin1234
       
 **NexCart — AI-Enhanced E-Commerce Platform**
 
